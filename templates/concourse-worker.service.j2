@@ -11,6 +11,7 @@ LimitNOFILE=infinity
 LimitMEMLOCK=infinity
 Restart=on-failure
 ExecStart={{ concourse_worker_launcher_path }}
+ExecStop={{ concourse_retire_worker_path }}
 ExecReload=/bin/kill -HUP $MAINPID
 KillSignal=SIGTERM
 
