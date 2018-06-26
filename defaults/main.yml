@@ -11,7 +11,6 @@ concourse_group: "{{ concourse_user }}"
 concourse_gid: "{{ concourse_uid }}"
 concourse_force_restart: no
 concourse_service_enabled: yes
-concourse_service_start: yes
 
 # Web variables
 
