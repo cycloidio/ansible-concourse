@@ -7,4 +7,4 @@ exec {{ concourse_install_dir }}/concourse retire-worker \
   --tsa-port {{ concourse_tsa_port }} \
   --tsa-public-key {{ concourse_tsa_public_key_path }} \
   --tsa-worker-private-key {{ concourse_tsa_worker_key_path }} \
-  --name {{ concourse_work_name }}
+  --name {{ concourse_worker_name }}
