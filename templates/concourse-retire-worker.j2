@@ -2,6 +2,7 @@
 
 # {{ ansible_managed }}
 
+# Do we need to while on it ? `while ! concourse retire-worker --name=${HOSTNAME} | grep -q worker-not-found; do`
 exec {{ concourse_install_dir }}/concourse retire-worker \
   --tsa-host {{ concourse_tsa_host }} \
   --tsa-port {{ concourse_tsa_port }} \

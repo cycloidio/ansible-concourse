@@ -39,4 +39,5 @@ concourse_tsa_port: 2222
 #concourse_tsa_public_key:
 #concourse_tsa_worker_key:
 #concourse_worker_tag:
+#concourse_worker_team:
 #concourse_worker_options:

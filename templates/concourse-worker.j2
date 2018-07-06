@@ -10,4 +10,5 @@ exec {{ concourse_install_dir }}/concourse worker \
   --name {{ concourse_worker_name }} \
   --work-dir {{ concourse_work_dir }} \
   {% if concourse_worker_tag is defined %}--tag {{ concourse_worker_tag }}{% endif %} \
+  {% if concourse_worker_team is defined %}--team {{ concourse_worker_team }}{% endif %} \
   {{ concourse_worker_options }}
