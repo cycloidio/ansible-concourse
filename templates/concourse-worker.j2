@@ -2,6 +2,11 @@
 
 # {{ ansible_managed }}
 
+{% if concourse_worker_forward_force_accept|bool %}
+iptables -P FORWARD ACCEPT
+{% endif %}
+
+
 exec {{ concourse_install_dir }}/concourse worker \
   --tsa-host "{{ concourse_tsa_host }}:{{ concourse_tsa_port }}" \
   --tsa-public-key {{ concourse_tsa_public_key_path }} \
