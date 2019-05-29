@@ -12,7 +12,7 @@ LimitMEMLOCK=infinity
 Restart=on-failure
 RestartSec=10s
 ExecStart={{ concourse_worker_launcher_path }}
-ExecStop={{ concourse_retire_worker_path }}
+ExecStop={{ concourse_retire_worker_path }} $MAINPID
 ExecReload=/bin/kill -HUP $MAINPID
 KillSignal=SIGTERM
 

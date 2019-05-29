@@ -2,9 +2,21 @@
 
 # {{ ansible_managed }}
 
-# Do we need to while on it ? `while ! concourse retire-worker --name=${HOSTNAME} | grep -q worker-not-found; do`
-exec {{ concourse_install_dir }}/concourse retire-worker \
-  --tsa-host "{{ concourse_tsa_host }}:{{ concourse_tsa_port }}" \
-  --tsa-public-key {{ concourse_tsa_public_key_path }} \
-  --tsa-worker-private-key {{ concourse_tsa_worker_key_path }} \
-  --name {{ concourse_worker_name }}
+# If $1 PID of concourse worker is provided, do a kill instead of an api call
+# Mostly used by systemd for concourse compatiility issues https://github.com/concourse/concourse/pull/3929
+
+until ! curl --fail 127.0.0.1:7777/ping; do
+
+  if [[ -z "$1" ]]; then
+    {{ concourse_install_dir }}/concourse retire-worker \
+      --tsa-host "{{ concourse_tsa_host }}:{{ concourse_tsa_port }}" \
+      --tsa-public-key {{ concourse_tsa_public_key_path }} \
+      --tsa-worker-private-key {{ concourse_tsa_worker_key_path }} \
+    {% if concourse_worker_team is defined %}--team {{ concourse_worker_team }}{% endif %} \
+      --name {{ concourse_worker_name }}
+  else
+    pkill --signal SIGUSR2 -g $1
+  fi
+
+  sleep 10
+done
