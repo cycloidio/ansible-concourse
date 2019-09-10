@@ -6,15 +6,17 @@ Requires=network-online.target
 After=network-online.target
 
 [Service]
-TasksMax=infinity
-LimitNOFILE=infinity
-LimitMEMLOCK=infinity
-Restart=on-failure
-RestartSec=10s
 ExecStart={{ concourse_worker_launcher_path }}
 ExecStop={{ concourse_retire_worker_path }} $MAINPID
 ExecReload=/bin/kill -HUP $MAINPID
-KillSignal=SIGTERM
+Restart=on-failure
+RestartSec=10s
+LimitNPROC=infinity
+LimitNOFILE=infinity
+TasksMax=infinity
+MemoryLimit={{ (ansible_memtotal_mb * 0.9) | int | abs }}M
+Delegate=yes
+KillMode=process
 
 [Install]
 WantedBy=multi-user.target
