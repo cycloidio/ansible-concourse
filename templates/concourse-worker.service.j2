@@ -14,7 +14,6 @@ RestartSec=10s
 LimitNPROC=infinity
 LimitNOFILE=infinity
 TasksMax=infinity
-MemoryLimit={{ (ansible_memtotal_mb * 0.9) | int | abs }}M
 Delegate=yes
 KillMode=process
 
