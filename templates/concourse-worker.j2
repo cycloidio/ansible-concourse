@@ -2,6 +2,24 @@
 
 # {{ ansible_managed }}
 
+watchdog() {
+    WORKER_PID=$1
+
+    while(true); do
+        FAIL=0
+
+        curl --silent 127.0.0.1:8888 || FAIL=1
+
+        if [[ $FAIL -eq 0 ]]; then
+            /bin/systemd-notify --pid=$WORKER_PID "WATCHDOG=1";
+            sleep $(({{ concourse_worker_watchdog_sec }} / 2))
+        else
+            echo "watchdog: concourse-worker healthcheck failed"
+            sleep 1
+        fi
+    done
+}
+
 {% if concourse_worker_forward_force_accept|bool %}
 iptables -P FORWARD ACCEPT
 {% endif %}
@@ -9,6 +27,8 @@ iptables -P FORWARD ACCEPT
 {% for key, value in concourse_worker_env.items() %}
 export {{ key }}="{{ value }}"
 {% endfor %}
+
+watchdog $$ &
 
 exec {{ concourse_binary_path }} worker \
   --tsa-host "{{ concourse_tsa_host }}:{{ concourse_tsa_port }}" \
