@@ -24,9 +24,62 @@
     group: "{{ concourse_group }}"
   become: yes
 
+- name: create binary directory | concourse
+  file:
+    path: "{{ concourse_binary_path | dirname }}"
+    state: directory
+    mode: 0755
+    owner: "{{ concourse_user }}"
+    group: "{{ concourse_group }}"
+  become: yes
+
 - include: stop.yml
   when: needs_install
 
+# For Concourse version > 5
+- name: Install, configure, and start Apache
+  block:
+    - name: download archive
+      get_url:
+        url: "{{ concourse_archive_url }}"
+        dest: "{{ concourse_install_dir }}/{{ concourse_archive_name }}"
+        mode: 0755
+        force: no
+        timeout: "{{ concourse_archive_fetch_timeout }}"
+      become: yes
+      register: binary_download
+      tags:
+      - no-test
+    - name: unpack archive
+      unarchive:
+        src: "{{ concourse_install_dir }}/{{ concourse_archive_name }}"
+        dest: "{{ concourse_install_dir }}"
+        remote_src: yes
+        mode: 0755
+        owner: "{{ concourse_user }}"
+        group: "{{ concourse_group }}"
+        extra_opts: [--strip-components=1]
+      become: yes
+      when: binary_download is not defined or binary_download is changed
+      notify:
+      - restart concourse web
+      - restart concourse worker
+    - name: delete archive
+      file:
+        path: "{{ concourse_install_dir }}/{{ concourse_archive_name }}"
+        state: absent
+      become: yes
+      when: concourse_archive_delete_after_unarchive
+    - name: binary permissions
+      file:
+        path: "{{ concourse_binary_path }}"
+        owner: "{{ concourse_user }}"
+        group: "{{ concourse_group }}"
+        mode: "{{ concourse_binary_mode }}"
+      become: yes
+  when: needs_install and concourse_version is version('5.0', '>=')
+
+# For Concourse under version 5
 - name: download binary | concourse
   get_url:
     url: https://github.com/concourse/concourse/releases/download/v{{ concourse_version }}/concourse_{{ concourse_binary_os }}_{{ concourse_binary_arch }}
@@ -37,7 +90,7 @@
     force: yes
     timeout: "{{ concourse_binary_fetch_timeout }}"
   become: yes
-  when: needs_install
+  when: needs_install and concourse_version is version('5.0', '<')
   register: binary_download
   notify:
   - restart concourse web
