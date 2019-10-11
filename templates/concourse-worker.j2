@@ -6,8 +6,11 @@
 iptables -P FORWARD ACCEPT
 {% endif %}
 
+{% for key, value in concourse_worker_env.items() %}
+export {{ key }}="{{ value }}"
+{% endfor %}
 
-exec {{ concourse_install_dir }}/concourse worker \
+exec {{ concourse_binary_path }} worker \
   --tsa-host "{{ concourse_tsa_host }}:{{ concourse_tsa_port }}" \
   --tsa-public-key {{ concourse_tsa_public_key_path }} \
   --tsa-worker-private-key {{ concourse_tsa_worker_key_path }} \
