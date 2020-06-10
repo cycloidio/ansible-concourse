@@ -4,6 +4,8 @@
 Description=concourse-worker
 Requires=network-online.target
 After=network-online.target
+Wants=concourse-worker-watchdog.service
+Before=concourse-worker-watchdog.service
 
 [Service]
 ExecStart={{ concourse_worker_launcher_path }}
@@ -16,6 +18,17 @@ LimitNOFILE=infinity
 TasksMax=infinity
 Delegate=yes
 KillMode=process
+
+## Watchdog
+WatchdogSec={{ concourse_worker_watchdog_sec }}
+NotifyAccess=main
+{% if concourse_worker_watchdog_terminate_on_repeating_start_failure|bool %}
+# If there is `StartLimitBurst` failed restart attempt
+# within `StartLimitInterval` then force poweroff
+StartLimitInterval=5min
+StartLimitBurst=4
+StartLimitAction=poweroff-force
+{% endif %}
 
 [Install]
 WantedBy=multi-user.target
