@@ -12,6 +12,13 @@
   become: yes
   when: concourse_worker
 
+- name: configure worker watchdog service | concourse
+  service:
+    name: concourse-worker-watchdog
+    enabled: "{{ concourse_service_watchdog_enabled }}"
+  become: yes
+  when: concourse_worker
+
 - name: start web service | concourse
   service:
     name: concourse-web
@@ -22,6 +29,13 @@
 - name: start worker service | concourse
   service:
     name: concourse-worker
+    state: started
+  become: yes
+  when: concourse_worker and concourse_service_enabled
+
+- name: start worker watchdog service | concourse
+  service:
+    name: concourse-worker-watchdog
     state: started
   become: yes
   when: concourse_worker and concourse_service_enabled

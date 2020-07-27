@@ -24,14 +24,21 @@
       dest: "{{ concourse_worker_launcher_path }}"
     - src: concourse-retire-worker.j2
       dest: "{{ concourse_retire_worker_path }}"
+    - src: concourse-worker-watchdog.j2
+      dest: "{{ concourse_install_dir }}/concourse-worker-watchdog"
 
 - name: create worker service | concourse
   template:
-    src: concourse-worker.service.j2
-    dest: /etc/systemd/system/concourse-worker.service
+    src: "{{ item['src'] }}"
+    dest: "{{ item['dest'] }}"
     owner: root
     force: yes
   become: yes
   become_user: root
+  with_items:
+  - src: concourse-worker.service.j2
+    dest: /etc/systemd/system/concourse-worker.service
+  - src: concourse-worker-watchdog.service.j2
+    dest: /etc/systemd/system/concourse-worker-watchdog.service
   notify:
   - restart concourse worker
