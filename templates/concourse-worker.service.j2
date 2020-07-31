@@ -4,6 +4,7 @@
 Description=concourse-worker
 Requires=network-online.target
 After=network-online.target
+Before=concourse-worker-watchdog.service
 
 [Service]
 ExecStart={{ concourse_worker_launcher_path }}

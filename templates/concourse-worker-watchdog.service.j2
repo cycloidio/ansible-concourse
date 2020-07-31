@@ -1,0 +1,15 @@
+# {{ ansible_managed }}
+
+[Unit]
+Description=concourse-worker-watchdog
+Requires=network-online.target
+After=concourse-worker.service
+
+[Service]
+ExecStart={{ concourse_install_dir }}/concourse-worker-watchdog
+ExecStop=/bin/kill $MAINPID
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

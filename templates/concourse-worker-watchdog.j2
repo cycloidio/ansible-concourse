@@ -1,0 +1,32 @@
+#!/bin/bash
+
+watchdog() {
+    #WORKER_PID=$1
+
+    RETRY=3
+    while(true); do
+        FAIL=0
+
+        curl --silent 127.0.0.1:8888 || FAIL=1
+
+        #if [[ $FAIL -eq 0 ]]; then
+        if [[ $FAIL -eq 1 ]]; then
+            if [[ $RETRY -ne 0 ]]; then
+              echo "retry $RETRY"
+              ((RETRY=RETRY-1))
+            else
+              echo "restart worker"
+              #/bin/systemd-notify --pid=$WORKER_PID "WATCHDOG=1";
+              /bin/systemctl restart concourse-worker
+              RETRY=3
+            fi
+        else
+            echo "watchdog: concourse-worker healthcheck ok"
+            #sleep 1
+            RETRY=3
+        fi
+        sleep 15
+    done
+}
+
+watchdog
