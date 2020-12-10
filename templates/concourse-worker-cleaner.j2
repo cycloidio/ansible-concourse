@@ -19,6 +19,6 @@ log() {
 log "Starting ${0} script"
 
 # Removing files inside this directory in case the directory itself is a mountpoint
-rm -rf "{{ concourse_work_dir }}/*"
+rm -rf {{ concourse_work_dir }}/*
 
 log "Ending ${0} script"
