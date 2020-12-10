@@ -26,6 +26,8 @@
       dest: "{{ concourse_retire_worker_path }}"
     - src: concourse-worker-watchdog.j2
       dest: "{{ concourse_install_dir }}/concourse-worker-watchdog"
+    - src: concourse-worker-cleaner.j2
+      dest: "{{ concourse_worker_cleaner_path }}"
 
 - name: create worker service | concourse
   template:
@@ -40,5 +42,7 @@
     dest: /etc/systemd/system/concourse-worker.service
   - src: concourse-worker-watchdog.service.j2
     dest: /etc/systemd/system/concourse-worker-watchdog.service
+  - src: concourse-worker-cleaner.service.j2
+    dest: /etc/systemd/system/concourse-worker-cleaner.service
   notify:
   - restart concourse worker

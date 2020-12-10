@@ -1,0 +1,16 @@
+# {{ ansible_managed }}
+
+[Unit]
+Description=concourse-worker-cleaner
+Requires=network-online.target
+After=network-online.target
+Before=concourse-worker.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=true
+ExecStart={{ concourse_worker_cleaner_path }}
+ExecStop=/bin/true
+
+[Install]
+WantedBy=multi-user.target

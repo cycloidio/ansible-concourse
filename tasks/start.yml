@@ -19,6 +19,13 @@
   become: yes
   when: concourse_worker
 
+- name: configure worker cleaner service | concourse
+  service:
+    name: concourse-worker-cleaner
+    enabled: "{{ concourse_service_worker_cleaner_enabled }}"
+  become: yes
+  when: concourse_worker
+
 - name: start web service | concourse
   service:
     name: concourse-web
