@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# {{ ansible_managed }}
+
+set -x
+
+LOG_FILE="/var/log/concourse-worker-cleaner.log"
+
+# Empty logfile to keep only the latest run
+:>$LOG_FILE
+
+# Display logs on stdout and save them into log file
+exec &> >(tee -a ${LOG_FILE})
+
+log() {
+ echo "$(date) ${HOSTNAME} Worker-Cleaner[${$}]: ${USER} ${*}"
+}
+
+log "Starting ${0} script"
+
+# Removing files inside this directory in case the directory itself is a mountpoint
+rm -rf "{{ concourse_work_dir }}/*"
+
+log "Ending ${0} script"

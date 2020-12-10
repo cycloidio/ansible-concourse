@@ -18,6 +18,8 @@ concourse_gid: "{{ concourse_uid }}"
 concourse_force_restart: no
 concourse_service_enabled: yes
 concourse_service_watchdog_enabled: yes
+# Service at the startup of the instance to clean the concourse worker data directory
+concourse_service_worker_cleaner_enabled: no
 
 # Concourse source variables
 
@@ -47,6 +49,7 @@ concourse_session_signing_key_path: "{{ concourse_install_dir }}/session_signing
 concourse_worker: no
 concourse_worker_name: "{{ ansible_hostname }}"
 concourse_worker_launcher_path: "{{ concourse_install_dir }}/concourse-worker"
+concourse_worker_cleaner_path: "{{ concourse_install_dir }}/concourse-worker-cleaner"
 concourse_retire_worker_path: "{{ concourse_install_dir }}/concourse-retire-worker"
 concourse_work_dir: "{{ concourse_install_dir }}/work"
 concourse_tsa_public_key_path: "{{ concourse_install_dir }}/host_key.pub"
