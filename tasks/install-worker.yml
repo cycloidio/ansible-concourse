@@ -1,4 +1,9 @@
 ---
+- name: Install curl for worker retire | concourse
+  package:
+    name: curl
+    state: present
+
 - name: create work directory | concourse
   file:
     path: "{{ concourse_work_dir }}"
