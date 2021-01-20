@@ -33,6 +33,8 @@
       dest: "{{ concourse_install_dir }}/concourse-worker-watchdog"
     - src: concourse-worker-cleaner.j2
       dest: "{{ concourse_worker_cleaner_path }}"
+  notify:
+  - restart concourse worker
 
 - name: create worker service | concourse
   template:
