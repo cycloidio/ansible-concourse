@@ -15,14 +15,14 @@
 - name: configure worker watchdog service | concourse
   service:
     name: concourse-worker-watchdog
-    enabled: "{{ concourse_service_watchdog_enabled }}"
+    enabled: "{{ concourse_service_watchdog_enabled and concourse_service_enabled }}"
   become: yes
   when: concourse_worker
 
 - name: configure worker cleaner service | concourse
   service:
     name: concourse-worker-cleaner
-    enabled: "{{ concourse_service_worker_cleaner_enabled }}"
+    enabled: "{{ concourse_service_worker_cleaner_enabled and concourse_service_enabled }}"
   become: yes
   when: concourse_worker
 
