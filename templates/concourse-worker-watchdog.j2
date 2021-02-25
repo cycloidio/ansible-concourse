@@ -3,6 +3,10 @@
 watchdog() {
     #WORKER_PID=$1
 
+    # Grace periode just to be sure Concourse have enough time during the
+    # First startup
+    sleep 120
+
     RETRY=3
     while(true); do
         FAIL=0
