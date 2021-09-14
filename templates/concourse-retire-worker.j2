@@ -9,7 +9,7 @@ export {{ key }}="{{ value }}"
 # If $1 PID of concourse worker is provided, do a kill instead of an api call
 # Mostly used by systemd for concourse compatiility issues https://github.com/concourse/concourse/pull/3929
 
-until ! curl --silent --fail 127.0.0.1:7777/ping; do
+until ! curl --silent --fail 127.0.0.1:8888; do
 
   if [[ -z "$1" ]]; then
     {{ concourse_binary_path }} retire-worker \
