@@ -6,7 +6,7 @@
 iptables -P FORWARD ACCEPT
 {% endif %}
 
-{% for key, value in concourse_worker_env.items() %}
+{% for key, value in _concourse_worker_env.items() %}
 export {{ key }}="{{ value }}"
 {% endfor %}
 
