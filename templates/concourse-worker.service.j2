@@ -4,12 +4,16 @@
 Description=concourse-worker
 Requires=network-online.target
 After=network-online.target
+{% if concourse_service_watchdog_enabled|bool %}
+Wants=concourse-worker-watchdog.service
 Before=concourse-worker-watchdog.service
+{% endif %}
 
 [Service]
 ExecStart={{ concourse_worker_launcher_path }}
 ExecStop={{ concourse_retire_worker_path }} $MAINPID
 ExecReload=/bin/kill -HUP $MAINPID
+SuccessExitStatus=SIGHUP SIGINT SIGTERM SIGPIPE SIGUSR2
 Restart=on-failure
 RestartSec=10s
 LimitNPROC=infinity
