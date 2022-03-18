@@ -19,13 +19,19 @@ watchdog() {
               echo "retry $RETRY"
               ((RETRY=RETRY-1))
             else
-              echo "restart worker"
-              #/bin/systemd-notify --pid=$WORKER_PID "WATCHDOG=1";
-              /bin/systemctl restart concourse-worker
+              fuser /tmp/concourse-retire-worker.lock >/dev/null 2>&1
+              free_retire_lock=$?
+              if [[ $free_retire_lock -eq 1 ]]; then
+                echo "restart worker"
+                #/bin/systemd-notify --pid=$WORKER_PID "WATCHDOG=1";
+                /bin/systemctl restart concourse-worker
+              else
+                echo "worker is already being retired"
+              fi
               RETRY=3
             fi
         else
-            echo "watchdog: concourse-worker healthcheck ok"
+            echo "concourse-worker healthcheck ok"
             #sleep 1
             RETRY=3
         fi

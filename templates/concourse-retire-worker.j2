@@ -7,11 +7,22 @@ export {{ key }}="{{ value }}"
 {% endfor %}
 
 # If $1 PID of concourse worker is provided, do a kill instead of an api call
-# Mostly used by systemd for concourse compatiility issues https://github.com/concourse/concourse/pull/3929
+# Mostly used by systemd for concourse compatibility issues https://github.com/concourse/concourse/pull/3929
+
+exit_already_retiring() {
+  echo "$0: worker already retiring"
+  exit 0
+}
+
+echo "$0: starting script"
+
+(
+flock -n $concourse_retire_lock_fd || exit_already_retiring
 
 until ! curl --silent --fail 127.0.0.1:8888; do
 
   if [[ -z "$1" ]]; then
+    echo "$0: running retire-worker command"
     {{ concourse_binary_path }} retire-worker \
       --tsa-host "{{ concourse_tsa_host }}:{{ concourse_tsa_port }}" \
       --tsa-public-key {{ concourse_tsa_public_key_path }} \
@@ -19,8 +30,13 @@ until ! curl --silent --fail 127.0.0.1:8888; do
     {% if concourse_worker_team is defined %}--team {{ concourse_worker_team }}{% endif %} \
       --name {{ concourse_worker_name }}
   else
+    echo "$0: executing SIGUSR2 pkill on PID $1"
+    ps afx | grep $1 | grep -v grep
     pkill --signal SIGUSR2 -g $1
   fi
 
   sleep 10
 done
+) {concourse_retire_lock_fd}>/tmp/concourse-retire-worker.lock
+
+echo "$0: script ending"
