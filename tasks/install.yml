@@ -33,6 +33,29 @@
     group: "{{ concourse_group }}"
   become: yes
 
+- name: Ensure /usr/local/concourse is present | concourse
+  file:
+    path: "/usr/local/concourse"
+    state: directory
+    mode: 0755
+    owner: "{{ concourse_user }}"
+    group: "{{ concourse_group }}"
+  become: yes
+  when: concourse_binary_path | dirname != "/usr/local/concourse/bin"
+
+# Create a symlink in /usr/local/concourse because lot if Concourse default path target this directory.
+# this symlink is just here in case user forgot to override few env vars
+- name: Create /usr/local/concourse symbolic link | concourse
+  ansible.builtin.file:
+    src: "{{ concourse_binary_path | dirname }}"
+    dest: "/usr/local/concourse/bin"
+    state: link
+    mode: 0755
+    owner: "{{ concourse_user }}"
+    group: "{{ concourse_group }}"
+  become: yes
+  when: concourse_binary_path | dirname != "/usr/local/concourse/bin"
+
 - include: stop.yml
   when: needs_install
 
