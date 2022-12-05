@@ -69,13 +69,15 @@ concourse_worker_dns_server: ""
 
 concourse_worker_containerd_env:
     CONCOURSE_RUNTIME: "{{ concourse_worker_runtime }}"
-    CONCOURSE_CONTAINERD_MAX_CONTAINERS: 1024
+    CONCOURSE_CONTAINERD_MAX_CONTAINERS: 2048
     CONCOURSE_CONTAINERD_NETWORK_POOL: "10.254.0.0/16"
+    CONCOURSE_BAGGAGECLAIM_VOLUMES: "{{ concourse_work_dir }}/baggageclaim_volumes"
 
 concourse_worker_guardian_env:
     CONCOURSE_RUNTIME: "{{ concourse_worker_runtime }}"
     CONCOURSE_GARDEN_ASSETS_DIR: "{{ concourse_work_dir }}/garden_assets/"
     CONCOURSE_GARDEN_DEPOT: "{{ concourse_work_dir }}/garden_depot"
+    CONCOURSE_BAGGAGECLAIM_VOLUMES: "{{ concourse_work_dir }}/baggageclaim_volumes"
     CONCOURSE_GARDEN_LOG_LEVEL: "error"
     CONCOURSE_GARDEN_NETWORK_POOL: "10.254.0.0/16"
     CONCOURSE_GARDEN_MAX_CONTAINERS: 1024
