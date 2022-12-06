@@ -33,6 +33,6 @@ fi
 rm -rf {{ concourse_work_dir }}/*
 
 # Removing all Concourse logs files
-rm -rf /var/log/concourse-worker.log /var/log/daemon.*
+rm -f /var/log/concourse-worker.log /var/log/daemon.*
 
 log "Ending ${0} script"
