@@ -32,4 +32,7 @@ fi
 # Removing files inside this directory in case the directory itself is a mountpoint
 rm -rf {{ concourse_work_dir }}/*
 
+# Removing all Concourse logs files
+rm -f /var/log/concourse-worker.log /var/log/daemon.*
+
 log "Ending ${0} script"
