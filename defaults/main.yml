@@ -64,7 +64,7 @@ concourse_worker_env: {}
 
 
 # Concourse worker container runtime: guardian|containerd|houdini
-concourse_worker_runtime: "guardian"
+concourse_worker_runtime: "containerd"
 concourse_worker_dns_server: ""
 
 concourse_worker_containerd_env:
