@@ -24,7 +24,7 @@ if command -v btrfs >/dev/null; then
   if [[ $concourse_work_dir_btrfs_check -eq 0 ]]; then
     if [[ $(btrfs subvolume list -a {{ concourse_work_dir }} | wc -l) -gt 0 ]]; then
       # the sort makes sub-subvolume (like docker ones) appears first, with an additional sed to remove annoying/useless <FS_TREE> string in the path
-      btrfs subvolume list -a {{ concourse_work_dir }} | awk '{print $9}' | sort | xargs -n 1 btrfs subvolume delete
+      btrfs subvolume list -a {{ concourse_install_dir }} | awk '{print "{{ concourse_install_dir }}/"$9}' | sort | xargs -n 1 btrfs subvolume delete
     fi
   fi
 fi
