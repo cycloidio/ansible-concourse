@@ -59,6 +59,7 @@ concourse_tsa_port: 2222
 #concourse_worker_tag:
 #concourse_worker_team:
 #concourse_worker_options:
+concourse_worker_cleaner_post_snippet: ""
 
 concourse_worker_env: {}
 

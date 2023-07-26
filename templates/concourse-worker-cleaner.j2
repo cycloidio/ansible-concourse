@@ -35,4 +35,6 @@ rm -rf {{ concourse_work_dir }}/*
 # Removing all Concourse logs files
 rm -f /var/log/concourse-worker.log /var/log/daemon.*
 
+{{ concourse_worker_cleaner_post_snippet }}
+
 log "Ending ${0} script"
