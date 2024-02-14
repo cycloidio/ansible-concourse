@@ -15,6 +15,7 @@ concourse_group: "{{ concourse_user }}"
 concourse_gid: "{{ concourse_uid }}"
 concourse_force_restart: no
 concourse_service_enabled: yes
+concourse_service_started: yes
 concourse_service_watchdog_enabled: yes
 # Service at the startup of the instance to clean the concourse worker data directory
 concourse_service_worker_cleaner_enabled: no
@@ -101,4 +102,3 @@ _concourse_worker_env: |
 # Make sure garden linux container can access to internet to avoid those kind of error with the git resource :
 # fatal: unable to access 'https://github.com/.../': Could not resolve host: github.com
 concourse_worker_forward_force_accept: yes
-
