@@ -31,18 +31,18 @@
     name: concourse-web
     state: started
   become: yes
-  when: concourse_web and concourse_service_enabled
+  when: concourse_web and concourse_service_started
 
 - name: start worker service | concourse
   service:
     name: concourse-worker
     state: started
   become: yes
-  when: concourse_worker and concourse_service_enabled
+  when: concourse_worker and concourse_service_started
 
 - name: start worker watchdog service | concourse
   service:
     name: concourse-worker-watchdog
     state: started
   become: yes
-  when: concourse_worker and concourse_service_enabled
+  when: concourse_worker and concourse_service_started
