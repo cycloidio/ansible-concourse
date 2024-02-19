@@ -1,11 +1,11 @@
 ---
-- include: system.yml
-- include: install.yml
-- include: configure.yml
-- include: start.yml
+- include_tasks: system.yml
+- include_tasks: install.yml
+- include_tasks: configure.yml
+- include_tasks: start.yml
 
 - shell: /bin/true
   when: concourse_force_restart
   notify:
-  - restart concourse web
-  - restart concourse worker
+    - restart concourse web
+    - restart concourse worker
