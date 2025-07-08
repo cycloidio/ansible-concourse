@@ -19,14 +19,26 @@ watchdog() {
               echo "retry $RETRY"
               ((RETRY=RETRY-1))
             else
-              fuser /tmp/concourse-retire-worker.lock >/dev/null 2>&1
-              free_retire_lock=$?
-              if [[ $free_retire_lock -eq 1 ]]; then
-                echo "restart worker"
-                #/bin/systemd-notify --pid=$WORKER_PID "WATCHDOG=1";
-                /bin/systemctl restart concourse-worker
-              else
-                echo "worker is already being retired"
+
+              LOCK_RETRY=3
+              while [[ $LOCK_RETRY -gt 0 ]]; do
+                  fuser /tmp/concourse-retire-worker.lock >/dev/null 2>&1
+                  free_retire_lock=$?
+
+                  if [[ $free_retire_lock -eq 1 ]]; then
+                      echo "restart worker"
+                      /bin/systemctl restart concourse-worker
+                      break
+                  else
+                      echo "worker is already being retired $LOCK_RETRY left"
+                      ((LOCK_RETRY=LOCK_RETRY-1))
+                      sleep 15
+                  fi
+              done
+
+              if [[ $LOCK_RETRY -eq 0 ]]; then
+                  echo "lock still held after retries — forcing restart"
+                  /bin/systemctl restart concourse-worker
               fi
               RETRY=3
             fi
