@@ -64,7 +64,6 @@ concourse_worker_cleaner_post_snippet: ""
 
 concourse_worker_env: {}
 
-
 # Concourse worker container runtime: guardian|containerd|houdini
 concourse_worker_runtime: "containerd"
 concourse_worker_dns_server: ""
@@ -86,18 +85,7 @@ concourse_worker_guardian_env:
     CONCOURSE_GARDEN_ADDITIONAL_DNS_SERVER: "{{ concourse_worker_dns_server | default('1.1.1.1,1.0.0.1', true) }}"
     CONCOURSE_GARDEN_DESTROY_CONTAINERS_ON_STARTUP: true
 
-# Be careful this syntax work only with | and if you add any indent it will generate a string instead of a dict
-_concourse_worker_env: |
-    {% if concourse_worker_runtime == 'guardian' %}
-    {{ concourse_worker_guardian_env | combine(concourse_worker_env) }}
-    {% elif concourse_worker_runtime == 'containerd' and concourse_worker_dns_server and concourse_worker_dns_server != "" %}
-    {{ concourse_worker_containerd_env | combine(concourse_worker_env, {'CONCOURSE_CONTAINERD_DNS_SERVER': concourse_worker_dns_server}) }}
-    {% elif concourse_worker_runtime == 'containerd' %}
-    {{ concourse_worker_containerd_env | combine(concourse_worker_env) }}
-    {% else %}
-    {{ concourse_worker_env | combine({'CONCOURSE_RUNTIME': concourse_worker_runtime}) }}
-    {% endif %}
-
+_concourse_worker_env: "{% if concourse_worker_runtime == 'guardian' %}{{ concourse_worker_guardian_env | combine(concourse_worker_env) }}{% elif concourse_worker_runtime == 'containerd' and concourse_worker_dns_server and concourse_worker_dns_server != '' %}{{ concourse_worker_containerd_env | combine(concourse_worker_env, {'CONCOURSE_CONTAINERD_DNS_SERVER': concourse_worker_dns_server}) }}{% elif concourse_worker_runtime == 'containerd' %}{{ concourse_worker_containerd_env | combine(concourse_worker_env) }}{% else %}{{ concourse_worker_env | combine({'CONCOURSE_RUNTIME': concourse_worker_runtime}) }}{% endif %}"
 
 # Make sure garden linux container can access to internet to avoid those kind of error with the git resource :
 # fatal: unable to access 'https://github.com/.../': Could not resolve host: github.com
