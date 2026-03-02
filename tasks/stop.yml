@@ -4,7 +4,7 @@
     state: stopped
   become: yes
   ignore_errors: yes
-  when: concourse_web
+  when: concourse_web | bool
 
 - name: stop worker | concourse
   service:
@@ -12,4 +12,4 @@
     state: stopped
   become: yes
   ignore_errors: yes
-  when: concourse_worker
+  when: concourse_worker | bool

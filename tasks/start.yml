@@ -3,46 +3,46 @@
     name: concourse-web
     enabled: "{{ concourse_service_enabled }}"
   become: yes
-  when: concourse_web
+  when: concourse_web | bool
 
 - name: configure worker service | concourse
   service:
     name: concourse-worker
     enabled: "{{ concourse_service_enabled }}"
   become: yes
-  when: concourse_worker
+  when: concourse_worker | bool
 
 - name: configure worker watchdog service | concourse
   service:
     name: concourse-worker-watchdog
     enabled: "{{ concourse_service_watchdog_enabled and concourse_service_enabled }}"
   become: yes
-  when: concourse_worker
+  when: concourse_worker | bool
 
 - name: configure worker cleaner service | concourse
   service:
     name: concourse-worker-cleaner
     enabled: "{{ concourse_service_worker_cleaner_enabled and concourse_service_enabled }}"
   become: yes
-  when: concourse_worker
+  when: concourse_worker | bool
 
 - name: start web service | concourse
   service:
     name: concourse-web
     state: started
   become: yes
-  when: concourse_web and concourse_service_started
+  when: (concourse_web | bool) and (concourse_service_started | bool)
 
 - name: start worker service | concourse
   service:
     name: concourse-worker
     state: started
   become: yes
-  when: concourse_worker and concourse_service_started
+  when: (concourse_web | bool) and (concourse_service_started | bool)
 
 - name: start worker watchdog service | concourse
   service:
     name: concourse-worker-watchdog
     state: started
   become: yes
-  when: concourse_worker and concourse_service_started
+  when: (concourse_web | bool) and (concourse_service_started | bool)

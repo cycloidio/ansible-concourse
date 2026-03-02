@@ -1,6 +1,6 @@
 ---
 - include_tasks: configure-web.yml
-  when: concourse_web
+  when: concourse_web | bool
 
 - include_tasks: configure-worker.yml
-  when: concourse_worker
+  when: concourse_worker | bool

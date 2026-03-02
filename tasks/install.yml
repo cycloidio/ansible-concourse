@@ -121,8 +121,8 @@
 
 - name: install web | concourse
   include_tasks: install-web.yml
-  when: concourse_web
+  when: concourse_web | bool
 
 - name: install worker | concourse
   include_tasks: install-worker.yml
-  when: concourse_worker
+  when: concourse_worker | bool
