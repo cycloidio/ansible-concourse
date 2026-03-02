@@ -4,14 +4,14 @@
     name: concourse-web
     state: stopped
   become: yes
-  when: concourse_web
+  when: concourse_web | bool
 
 - name: stop concourse worker
   service:
     name: concourse-worker
     state: stopped
   become: yes
-  when: concourse_worker
+  when: concourse_worker | bool
 
 - name: restart concourse web
   service:
@@ -20,8 +20,7 @@
     enabled: yes
   become: yes
   become_user: root
-  when: concourse_web and concourse_service_enabled
-
+  when: (concourse_web | bool) and (concourse_service_enabled | bool)
 - name: restart concourse worker
   service:
     name: concourse-worker
@@ -29,4 +28,4 @@
     enabled: yes
   become: yes
   become_user: root
-  when: concourse_worker and concourse_service_enabled
+  when: (concourse_worker | bool) and (concourse_service_enabled | bool)
